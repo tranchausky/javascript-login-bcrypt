@@ -1,0 +1,145 @@
+<meta charset="UTF-8">
+
+<script src="./bcrypt.js"></script>
+<p>
+This is content page
+</p>
+<pre>
+1111 is Password
+after enter will need enter password after 5minus
+</pre>
+
+<div id="viewNeedPassword"></div>
+
+<script>
+const neeedPW = document.getElementById("viewNeedPassword");
+var contentView = `<div class="viewNeedPassword_overlay" id="viewNeedPassword_overlay"></div>
+<div class="viewNeedPassword_popup" id="viewNeedPassword_popup">
+	<h2>Enter Password</h2>
+	<div class="viewNeedPassword_grpw">
+		<input type="password" id="viewNeedPassword_passwordInput" placeholder="Enter password">
+		<i class="viewNeedPassword_view_pw" onclick="viewbackpw()">👁</i>
+	</div>
+	<br>
+	<button onclick="checkLoginBasic()">CheckPassword</button>
+	<p id="viewNeedPassword_message" style="color: red;"></p>
+</div>
+<style>
+.viewNeedPassword_popup {display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); border-radius: 5px; text-align: center;}
+.viewNeedPassword_overlay {display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);}
+.viewNeedPassword_popup input {padding: 5px;margin: 10px 0;border-radius: 7px;}
+.viewNeedPassword_popup button {padding: 5px 10px;margin: 5px;}
+.viewNeedPassword_grpw{position: relative; display: inline-block;}
+.viewNeedPassword_view_pw{position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px;}
+</style>
+`;
+
+neeedPW.innerHTML = contentView;
+
+const popup = document.getElementById("viewNeedPassword_popup");
+const overlay = document.getElementById("viewNeedPassword_overlay");
+
+document.getElementById("viewNeedPassword_passwordInput").addEventListener("keydown", (event) => 
+    (event.key === "Enter" || event.keyCode === 13) && (checkLoginBasic())
+);
+
+function viewbackpw(){
+	let passwordField = document.getElementById("viewNeedPassword_passwordInput");
+	passwordField.type = (passwordField.type === "password") ? "text" : "password";
+}
+function showNeedEnterAfter5Minus(){
+	popup.style.display = "block";
+	overlay.style.display = "block";
+}
+
+function closePopup() {
+	popup.style.display = "none";
+	overlay.style.display = "none";
+	document.getElementById("viewNeedPassword_passwordInput").value = "";
+	document.getElementById("viewNeedPassword_message").textContent = "";
+}
+
+function compareTextPasswordSession(text,encrypted, callback) {
+	text = text.trim();
+	var bcrypt = dcodeIO.bcrypt;
+	bcrypt.compare(text, encrypted, (err, res) => {
+		if (res == true) {
+			callback(true)
+		}else{
+			callback(false)
+		}
+	})
+}
+
+function checkLoginBasic(){
+	const pp_ss = document.getElementById("viewNeedPassword_passwordInput").value;
+	if(pp_ss == ''){
+		return false;
+	}
+	var hash = '$2a$10$.ETdJDsXxDv7MGSK88l97OWOau.YbV09n0EXZVeHRAsnsxZhMJ72.'; //11111
+	compareTextPasswordSession(pp_ss, hash, function(ispassHash){
+		if(ispassHash == true){
+			sessionStorage.setItem("sessionLogin", 'true');
+			closePopup();
+		}else{
+			const icons = ["😊", "🎵", "⚡", "✅", "❌", "🔥", "💡", "🚀", "🔔", "❤", "☀", "🌟", "🔑", "🔄"];
+            const randomIndex = Math.floor(Math.random() * icons.length);
+            var randomicon = icons[randomIndex];
+			console.log(randomicon)
+			document.getElementById("viewNeedPassword_message").innerHTML = "Incorrect password! "+randomicon;
+			sessionStorage.removeItem("sessionLogin");
+		}
+	});
+}
+
+function hassString(input){
+	var bcrypt = dcodeIO.bcrypt;
+	const rounds = 10
+	var pw_basic = input;//'1111'
+	pw_basic = pw_basic.toString().trim();
+
+	if(pw_basic== ""){
+		console.error('empty')
+		return;
+	}
+	bcrypt.hash(pw_basic, rounds, (err, hash) => {
+		if (err) {
+			console.error(err)
+			alert('Bcryt error')
+		}
+		console.log(hash)
+	})
+}
+
+
+let idleTime = 0;
+let minuNeedCheck = 5;
+console.log('runcheck 5minus')
+setInterval(timerIncrement, 1000);
+//function check after 5minus
+function timerIncrement() {
+    var isremember = localStorage.getItem('isrememberPW');
+    if(isremember == 'true'){
+        return;
+    }
+
+	//if(user_ID !='' && !$('#my-ss-login-view').is(':visible')){
+		idleTime++;	
+	//}
+   // console.log(idleTime)
+    if (idleTime > minuNeedCheck*60) { // 300 seconds = 5 minutes
+        // Call your function here
+        //console.log('No activity for 5 minutes');
+        idleTime = 0; // Reset idle time
+		showNeedEnterAfter5Minus();
+    }
+}
+document.addEventListener('mousemove', resetIdleTime);
+document.addEventListener('keydown', resetIdleTime);
+function resetIdleTime() {
+    idleTime = 0;
+}
+
+
+showNeedEnterAfter5Minus();
+</script>

@@ -1,0 +1,98 @@
+<script src="./bcrypt.js"></script>
+
+<pre>
+
+var bcrypt = dcodeIO.bcrypt;
+const rounds = 10
+var pw_basic = '1111';
+pw_basic = pw_basic.trim();
+
+if(pw_basic== ""){
+	//$(at).attr('pw_hash', '');
+	//$('#updateProfileUser').show();
+	//return;
+}
+
+
+bcrypt.hash(pw_basic, rounds, (err, hash) => {
+	if (err) {
+		console.error(err)
+		//return
+		alert('Bcryt error')
+		//$(at).attr('pw_hash') = '';
+		//$('#updateProfileUser').show();
+	}
+	//$(at).attr('pw_hash', hash);
+	//$('#updateProfileUser').show();
+	console.log(hash)
+})
+
+
+
+//var bcrypt = dcodeIO.bcrypt;
+var encrypted = '$2a$10$.ETdJDsXxDv7MGSK88l97OWOau.YbV09n0EXZVeHRAsnsxZhMJ72.';
+console.log(encrypted)
+var textcheck = '1112';
+bcrypt.compare(textcheck, encrypted, (err, res) => {
+if (res == true) {
+	alert('right');
+	//return true;
+	//callback(true)
+	
+}else{
+	alert('wrong');
+	//return false;
+	//callback(false)
+}
+})
+
+</pre>
+
+<script>
+
+var bcrypt = dcodeIO.bcrypt;
+const rounds = 10
+var pw_basic = '1111';
+pw_basic = pw_basic.trim();
+
+if(pw_basic== ""){
+	//$(at).attr('pw_hash', '');
+	//$('#updateProfileUser').show();
+	//return;
+}
+
+
+bcrypt.hash(pw_basic, rounds, (err, hash) => {
+	if (err) {
+		console.error(err)
+		//return
+		alert('Bcryt error')
+		//$(at).attr('pw_hash') = '';
+		//$('#updateProfileUser').show();
+	}
+	//$(at).attr('pw_hash', hash);
+	//$('#updateProfileUser').show();
+	console.log(hash)
+})
+
+
+
+//var bcrypt = dcodeIO.bcrypt;
+var encrypted = '$2a$10$.ETdJDsXxDv7MGSK88l97OWOau.YbV09n0EXZVeHRAsnsxZhMJ72.';
+console.log(encrypted)
+var textcheck = '1111';
+bcrypt.compare(textcheck, encrypted, (err, res) => {
+	if (res == true) {
+		alert('right');
+		//return true;
+		//callback(true)
+		
+	}else{
+		alert('wrong');
+		//return false;
+		//callback(false)
+	}
+})
+
+
+</script>
