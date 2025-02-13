@@ -9,6 +9,8 @@ This is content page
 after enter will need enter password after 5minus
 </pre>
 
+<div id="timeview"></div>
+
 <div id="viewNeedPassword"></div>
 
 <script>
@@ -111,6 +113,21 @@ function hassString(input){
 	})
 }
 
+function convertToTime(seconds) {
+    let isNegative = seconds < 0; // Kiểm tra số âm
+    seconds = Math.abs(seconds); // Lấy giá trị tuyệt đối
+
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let secs = seconds % 60;
+
+    // Định dạng thành hh:mm:ss
+    let timeString = [hours, minutes, secs]
+        .map(unit => String(unit).padStart(2, '0')) // Đảm bảo 2 chữ số
+        .join(':');
+
+    return isNegative ? `-${timeString}` : timeString;
+}
 
 let idleTime = 0;
 let minuNeedCheck = 5;
@@ -125,6 +142,7 @@ function timerIncrement() {
 
 	//if(user_ID !='' && !$('#my-ss-login-view').is(':visible')){
 		idleTime++;	
+	document.getElementById('timeview').innerHTML=convertToTime(idleTime);
 	//}
    // console.log(idleTime)
     if (idleTime > minuNeedCheck*60) { // 300 seconds = 5 minutes
